@@ -35,13 +35,15 @@ class MainHandler(tornado.web.RequestHandler):
         pass
 
     def get(self):
-        self.render("index.html", username="visitor %d" % ChatSocketHandler.client_id)
+        self.render("index.html", message=ChatSocketHandler.cache, username="visitor %d" % ChatSocketHandler.client_id)
 
 
 class ChatSocketHandler(tornado.websocket.WebSocketHandler):
     def data_received(self, chunk):
         pass
 
+    cache = []
+    cache_size = 200
     waiters = set()
     client_id = 1
 
@@ -52,6 +54,12 @@ class ChatSocketHandler(tornado.websocket.WebSocketHandler):
 
     def on_close(self):
         ChatSocketHandler.waiters.remove(self)
+
+    @classmethod
+    def update_cache(cls, chat):
+        cls.cache.append(chat)
+        if len(cls.cache) > cls.cache_size:
+            cls.cache = cls.cache[-cls.cache_size:]
 
     def on_message(self, message):
         logging.info("got message %r", message)
@@ -68,6 +76,7 @@ class ChatSocketHandler(tornado.websocket.WebSocketHandler):
         chat["html"] = tornado.escape.to_basestring(
             self.render_string("message.html", message=chat)
         )
+        ChatSocketHandler.update_cache(chat)
         ChatSocketHandler.send_updates(chat)
 
     @classmethod
