@@ -34,10 +34,23 @@ jQuery.fn.formToDict = function() {
     return json;
 };
 
-var updater = {
+function add(id, txt) {
+    var ul=$('#user_list');
+    var li=document.createElement("li");
+    li.innerHTML=txt;
+    li.id=id;
+    ul.append(li);
+}
+
+function del(id) {
+    $('#'+id).remove();
+}
+
+var updater;
+updater = {
     socket: null,
 
-    start: function() {
+    start: function () {
         var url = "ws://" + location.host + "/chatsocket";
         updater.socket = new WebSocket(url);
         updater.socket.onmessage = function (event) {
@@ -45,10 +58,17 @@ var updater = {
         }
     },
 
-    showMessage: function(message) {
+    showMessage: function (message) {
+        del(message.client_id);
+        if (message.type != "offline") {
+            add(message.client_id, message.username);
+        if (message.body == "") return;
+        var existing = $("#m" + message.id);
+        if (existing.length > 0) return;
         var node = $(message.html);
         node.hide();
         $("#inbox").append(node);
         node.slideDown();
+        }
     }
 };

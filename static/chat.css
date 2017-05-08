@@ -1,10 +1,10 @@
 #users {
     position: absolute;
-    color: navy;
+    color: dodgerblue;
     width: 150px;
     left: 0px;
     bottom: 0;
-    border-right: 1px solid black;
+    border-right: 4px solid black;
 }
 
 #right {
