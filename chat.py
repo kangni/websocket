@@ -7,6 +7,7 @@ import tornado.websocket
 import tornado.escape
 import logging
 import uuid
+import datetime
 import os.path
 from tornado.options import define, options
 
@@ -60,6 +61,9 @@ class ChatSocketHandler(tornado.websocket.WebSocketHandler):
             "id": str(uuid.uuid4()),
             "body": parsed["body"],
             "type": "message",
+            "client_id": self.client_id,
+            "username": self.username,
+            "datetime": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         }
         chat["html"] = tornado.escape.to_basestring(
             self.render_string("message.html", message=chat)
