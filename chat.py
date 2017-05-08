@@ -35,7 +35,9 @@ class MainHandler(tornado.web.RequestHandler):
         pass
 
     def get(self):
-        self.render("index.html", message=ChatSocketHandler.cache, username="visitor %d" % ChatSocketHandler.client_id)
+        self.render("index.html", message=ChatSocketHandler.cache,
+                    clients = ChatSocketHandler.waiters,
+                    username="visitor %d" % ChatSocketHandler.client_id)
 
 
 class ChatSocketHandler(tornado.websocket.WebSocketHandler):
