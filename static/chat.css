@@ -1,0 +1,16 @@
+#users {
+    position: absolute;
+    color: navy;
+    width: 150px;
+    left: 0px;
+    bottom: 0;
+    border-right: 1px solid black;
+}
+
+#right {
+    position: absolute;
+    color: black;
+    left: 160px;
+    bottom: 0;
+    width: 600px;
+}
